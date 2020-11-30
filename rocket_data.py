@@ -1,6 +1,5 @@
 import numpy as np
 
-
 class RocketData:
 
     def __init__(self, x, y, v, theta, drag):
