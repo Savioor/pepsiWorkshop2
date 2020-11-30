@@ -43,6 +43,14 @@ def rocket_in_air(dt, rocket_data):
     pass
 
 
+def get_hit_loc(dt, rocket_data):
+    pass
+
+
+def find_theta(dt, rocket_data):
+    pass
+
+
 def find_minimal_distance(rocket_data_first, rocket_data_second):
     pass
 
