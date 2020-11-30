@@ -1,5 +1,6 @@
 from rocket_data import *
 import math
+import matplotlib.pyplot as plt
 from constants import *
 
 
@@ -103,9 +104,51 @@ def find_minimal_distance(dt, rocket_data_first, rocket_data_second):
             lowest_dist = dist
 
 
+def find_minimal_distance_t(dt, rocket_data_first, rocket_data_second, theta_second):
+    temp = rocket_data_second.theta
+    rocket_data_second.theta = theta_second
+    ret = find_minimal_distance(dt, rocket_data_first, rocket_data_second)
+    rocket_data_second.theta = temp
+    return ret
+
+
+def find_next_theta_intercept(dt, theta0, theta1, rocket_data_enemy: RocketData,
+                                                    rocket_data_us: RocketData):
+    rocket_data_us.theta = theta1
+    div = \
+        find_minimal_distance_t(dt, rocket_data_enemy, rocket_data_us, theta1) \
+        - find_minimal_distance_t(dt, rocket_data_enemy, rocket_data_us, theta0)
+    return theta1 \
+                 - \
+           find_minimal_distance_t(dt, rocket_data_enemy, rocket_data_us, theta1) * (theta1 - theta0) / div
+
+
+def find_theta_intercept(dt, rocket_data_enemy, rocket_data_us):
+    theta0 = math.pi  # need to check for good starting theta's
+    theta1 = 3
+    count = 0
+    while count < 3:
+        if abs(theta1 - theta0) <= 0.001:
+            count += 1
+        else:
+            count = 0
+        tmp = theta1
+        theta1 = find_next_theta_intercept(dt, theta0, theta1, rocket_data_enemy, rocket_data_us)
+        theta0 = tmp
+    return theta1
+
+
 if __name__ == "__main__":
-    data1 = RocketData(0, 0, ROCKET_VEL, math.radians(50), 0)
-    data2 = RocketData(100, 0, ROCKET_VEL, math.radians(-45), 0)
+
+    data1 = RocketData(0, 0, ROCKET_VEL, math.radians(50), DRAG_TOTAL_COEF)
+    data2 = RocketData(get_hit_loc(0.001, data1)*0.75, 0, ROCKET_VEL, 2.2691859291924388, DRAG_TOTAL_COEF)
+
+    # x = np.linspace(math.pi/2, math.pi, 50)
+    # y = [find_minimal_distance_t(0.001, data1, data2, t) for t in x]
+    # fig, ax = plt.subplots()
+    # ax.plot(x, y)
+    # fig.show()
 
     print(find_minimal_distance(0.001, data1, data2))
+    print(find_theta_intercept(0.001, data1, data2))
 

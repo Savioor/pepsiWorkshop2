@@ -29,12 +29,12 @@ def sanity_check():
 
     fig, ax = plt.subplots()
 
-    data = RocketData(0, 0, ROCKET_VEL, math.radians(50), -1 * DRAG_TOTAL_COEF)
+    data = RocketData(0, 0, ROCKET_VEL, math.radians(50), -.1 * DRAG_TOTAL_COEF)
     path = rocket_in_air(0.0001, data)
 
     x_list = []
     y_list = []
-    for i in range(180000):
+    for i in range(100000):
         curr = next(path)
         if curr[1] < 0:
             break
@@ -88,5 +88,7 @@ def hit_lock_by_dt():
 
 if __name__ == "__main__":
     sanity_check()
+    visualization()
+    hit_lock_by_dt()
 
 
