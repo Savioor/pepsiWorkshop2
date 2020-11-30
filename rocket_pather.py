@@ -1,4 +1,6 @@
 from rocket_data import *
+import math
+from find_thetha_helper import *
 
 
 def approx_rocket_ode(dt, t, x0, y0, vx0, vy0, drag_coef):
@@ -61,7 +63,11 @@ def get_hit_loc(dt, rocket_data: RocketData):
 def find_theta(dt, rocket_data, desired_hit_loc):
     theta0 = 45  # need to check for good starting theta's
     theta1 = 70
-    while theta1 - theta0
+    while math.fabs(theta1 - theta0) > 0.001:
+        tmp = theta1
+        theta1 = find_next_theta(dt, theta0, theta1, desired_hit_loc, rocket_data)
+        theta0 = tmp
+    return theta1
 
 
 def find_minimal_distance(dt, rocket_data_first, rocket_data_second):
@@ -78,4 +84,3 @@ def find_minimal_distance(dt, rocket_data_first, rocket_data_second):
         dist = (first[0] - second[0]) ** 2 + (first[1] - second[1]) ** 2
         if dist < lowest_dist:
             lowest_dist = dist
-
