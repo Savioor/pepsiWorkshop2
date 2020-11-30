@@ -3,7 +3,8 @@ import math
 from find_thetha_helper import *
 
 
-def approx_rocket_ode(dt, t, x0, y0, vx0, vy0, drag_coef):
+
+def approx_rocket_ode(dt, t, x0, y0, vx0, vy0, drag_coef, m, g):
     """
 
     :param dt: time of sim step
@@ -15,7 +16,13 @@ def approx_rocket_ode(dt, t, x0, y0, vx0, vy0, drag_coef):
     :param drag_coef: the drag
     :return a list (t1, x1, y1, vx1, vy1) describing the state of the rocket after dt time
     """
-    return 0, 0, 0, 0, 0
+    v_size = math.sqrt(math.pow(vx0, 2) + math.pow(vy0, 2))
+    t1 = t + dt
+    x1 = x0 + vx0 * dt
+    y1 = y0 + vy0 * dt
+    vx1 = vx0 - drag_coef * v_size * vx0 * dt
+    vy1 = vy0 - (drag_coef * v_size * vy0 + m * g) * dt
+    return t1, x1, y1, vx1, vy1
 
 
 def rocket_in_vaccum(dt, x0, y0, v0, theta0):
