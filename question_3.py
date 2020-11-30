@@ -20,7 +20,7 @@ if __name__ == "__main__":
     fig, ax = plt.subplots()
     ax.plot(x_list, y_list)
 
-    data = RocketData(0, 0, ROCKET_VEL, math.radians(50), -1 * DRAG_TOTAL_COEF)
+    data = RocketData(0, 0, ROCKET_VEL, math.radians(50), -.1 * DRAG_TOTAL_COEF)
     path = rocket_in_air(0.0001, data)
 
     x_list = []
