@@ -49,7 +49,6 @@ def rocket_in_air(dt, rocket_data: RocketData):
     :return: generator returing the next point each time
     """
     vel_vect = rocket_data.get_vel_vector()
-    print(vel_vect)
     t = 0
     data = (t, rocket_data.x, rocket_data.y, vel_vect[0], vel_vect[1])
 
@@ -79,17 +78,13 @@ def find_next_theta(dt, theta0, theta1, x_dest, rocket_data: RocketData):
 
 
 def find_theta(dt, rocket_data, desired_hit_loc):
-    theta0 = math.radians(45)  # need to check for good starting theta's
-    theta1 = math.radians(50)
+    theta0 = math.radians(10)  # need to check for good starting theta's
+    theta1 = math.radians(30)
     while math.fabs(theta1 - theta0) > 0.001:
         tmp = theta1
         theta1 = find_next_theta(dt, theta0, theta1, desired_hit_loc, rocket_data)
         theta0 = tmp
     return theta1
-
-
-r = RocketData(0, 0, 10, 0, 0)
-print(find_theta(0.0001, r, 30))
 
 
 def find_minimal_distance(dt, rocket_data_first, rocket_data_second):
