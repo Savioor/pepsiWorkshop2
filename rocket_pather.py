@@ -1,8 +1,9 @@
 from rocket_data import *
 import math
+from constants import *
 
 
-def approx_rocket_ode(dt, t, x0, y0, vx0, vy0, drag_coef, m, g):
+def approx_rocket_ode(dt, t, x0, y0, vx0, vy0, drag_coef, m):
     """
 
     :param dt: time of sim step
@@ -18,8 +19,8 @@ def approx_rocket_ode(dt, t, x0, y0, vx0, vy0, drag_coef, m, g):
     t1 = t + dt
     x1 = x0 + vx0 * dt
     y1 = y0 + vy0 * dt
-    vx1 = vx0 - drag_coef * v_size * vx0 * dt
-    vy1 = vy0 - (drag_coef * v_size * vy0 + m * g) * dt
+    vx1 = vx0 - drag_coef * v_size * vx0 * dt/m
+    vy1 = vy0 - (drag_coef * v_size * vy0/m + G) * dt
     return t1, x1, y1, vx1, vy1
 
 
@@ -48,12 +49,13 @@ def rocket_in_air(dt, rocket_data: RocketData):
     :return: generator returing the next point each time
     """
     vel_vect = rocket_data.get_vel_vector()
+    print(vel_vect)
     t = 0
     data = (t, rocket_data.x, rocket_data.y, vel_vect[0], vel_vect[1])
 
     yield data[1], data[2]
     while True:
-        data = approx_rocket_ode(dt, data[0], data[1], data[2], data[3], data[4], rocket_data.drag)
+        data = approx_rocket_ode(dt, data[0], data[1], data[2], data[3], data[4], rocket_data.drag, ROCKET_MASS)
         yield data[1], data[2]
 
 
