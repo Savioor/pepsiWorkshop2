@@ -19,8 +19,8 @@ def approx_rocket_ode(dt, t, x0, y0, vx0, vy0, drag_coef, m):
     t1 = t + dt
     x1 = x0 + vx0 * dt
     y1 = y0 + vy0 * dt
-    vx1 = vx0 - drag_coef * v_size * vx0 * dt/m
-    vy1 = vy0 - (drag_coef * v_size * vy0/m + G) * dt
+    vx1 = vx0 - drag_coef * v_size * vx0 * dt / m
+    vy1 = vy0 - (drag_coef * v_size * vy0 / m + G) * dt
     return t1, x1, y1, vx1, vy1
 
 
@@ -72,18 +72,26 @@ def f(dt, theta, x_dest, rocket_data: RocketData):
 
 
 def find_next_theta(dt, theta0, theta1, x_dest, rocket_data: RocketData):
-    div = f(dt, theta1, x_dest, rocket_data) - f(dt, theta0, x_dest, rocket_data)
+    f_theta1 = f(dt, theta1, x_dest, rocket_data)
+    f_theta0 = f(dt, theta0, x_dest, rocket_data)
+    div = f_theta1 - f_theta0
     return theta1 \
-                 - f(dt, theta1, x_dest, rocket_data) * (theta1 - theta0) / div
+           - f_theta1 * (theta1 - theta0) / div
 
 
 def find_theta(dt, rocket_data, desired_hit_loc):
-    theta0 = math.radians(10)  # need to check for good starting theta's
-    theta1 = math.radians(30)
-    while math.fabs(theta1 - theta0) > 0.001:
+    theta0 = math.radians(89)  # need to check for good starting theta's
+    theta1 = math.radians(45)
+    convergent_cnt = 0
+    while convergent_cnt < 3:
         tmp = theta1
         theta1 = find_next_theta(dt, theta0, theta1, desired_hit_loc, rocket_data)
         theta0 = tmp
+        if abs(theta1 - theta0) < 0.001:
+            convergent_cnt += 1
+        else:
+            convergent_cnt = 0
+        print(theta1 - theta0)
     return theta1
 
 
@@ -108,4 +116,4 @@ if __name__ == "__main__":
     data2 = RocketData(100, 0, ROCKET_VEL, math.radians(-45), 0)
 
     print(find_minimal_distance(0.001, data1, data2))
-
+    print(find_theta(0.001, data1, 10000))
