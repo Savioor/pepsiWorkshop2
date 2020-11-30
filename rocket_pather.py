@@ -40,17 +40,22 @@ def rocket_in_air(dt, rocket_data: RocketData):
     :param drag_coef: the drag (C * rho * A)
     :return: generator returing the next point each time
     """
-    vel_vect = roccket_data.get_vel_vector()
+    vel_vect = rocket_data.get_vel_vector()
     t = 0
     data = (t, rocket_data.x, rocket_data.y, vel_vect[0], vel_vect[1])
 
     yield data[1], data[2]
     while True:
-        next = ()
+        data = approx_rocket_ode(dt, data[0], data[1], data[2], data[3], data[4], rocket_data.drag)
+        yield data[1], data[2]
 
 
-def get_hit_loc(dt, rocket_data):
-    pass
+def get_hit_loc(dt, rocket_data: RocketData):
+    rocket_path = rocket_in_air(dt, rocket_data)
+    while True:
+        point = next(rocket_path)
+        if point[1] < 0:
+            return point[0]
 
 
 def find_theta(dt, rocket_data, desired_hit_loc):
@@ -59,6 +64,18 @@ def find_theta(dt, rocket_data, desired_hit_loc):
     while theta1 - theta0
 
 
-def find_minimal_distance(rocket_data_first, rocket_data_second):
-    pass
+def find_minimal_distance(dt, rocket_data_first, rocket_data_second):
+    first_path = rocket_in_air(dt, rocket_data_first)
+    second_path = rocket_in_air(dt, rocket_data_second)
+    first = next(first_path)
+    second = next(second_path)
+    lowest_dist = (first[0] - second[0]) ** 2 + (first[1] - second[1]) ** 2
+    while True:
+        first = next(first_path)
+        second = next(second_path)
+        if first[1] < 0 or second[1] < 0:
+            return lowest_dist
+        dist = (first[0] - second[0]) ** 2 + (first[1] - second[1]) ** 2
+        if dist < lowest_dist:
+            lowest_dist = dist
 
