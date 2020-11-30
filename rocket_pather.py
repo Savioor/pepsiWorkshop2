@@ -47,8 +47,10 @@ def get_hit_loc(dt, rocket_data):
     pass
 
 
-def find_theta(dt, rocket_data):
-    pass
+def find_theta(dt, rocket_data, desired_hit_loc):
+    theta0 = 45  # need to check for good starting theta's
+    theta1 = 70
+    while theta1 - theta0
 
 
 def find_minimal_distance(rocket_data_first, rocket_data_second):
