@@ -4,7 +4,7 @@ import math
 import matplotlib.pyplot as plt
 
 if __name__ == "__main__":
-    data = RocketData(0, 0, 150, math.radians(50), 0)
+    data = RocketData(0, 0, ROCKET_VEL, math.radians(50), 0)
     path = rocket_in_air(0.001, data)
 
     x_list = []
