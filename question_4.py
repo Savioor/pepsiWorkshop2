@@ -14,7 +14,7 @@ if __name__ == '__main__':
     thetas = [find_theta(dt, data, i) for i in x_dest]
     fig, ax = plt.subplots()
     ax.plot(x_dest, thetas)
-    ax.set_xlabel("dest (m)")
-    ax.set_ylabel("theta (rad)")
-    ax.legend(["theta for desired dest"])
+    ax.set_xlabel("destination (m)")
+    ax.set_ylabel("theta")
+    ax.legend(["theta with destination"])
     fig.show()
