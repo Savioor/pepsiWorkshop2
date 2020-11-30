@@ -72,19 +72,20 @@ def f(dt, theta, x_dest, rocket_data: RocketData):
 
 
 def find_next_theta(dt, theta0, theta1, x_dest, rocket_data: RocketData):
-    next_theta = theta1 - f(dt, theta1, x_dest, rocket_data) * (theta1 - theta0) / (
-            f(dt, theta1, x_dest, rocket_data) - f(dt, theta0, x_dest, rocket_data))
-    return next_theta
+    div = f(dt, theta1, x_dest, rocket_data) - f(dt, theta0, x_dest, rocket_data)
+    return theta1 \
+                 - f(dt, theta1, x_dest, rocket_data) * (theta1 - theta0) / div
 
 
 def find_theta(dt, rocket_data, desired_hit_loc):
     theta0 = math.radians(45)  # need to check for good starting theta's
     theta1 = math.radians(50)
-    while math.fabs(theta1 - theta0) > 0.001:
+    while abs(theta1 - theta0) > 0.001:
         tmp = theta1
         theta1 = find_next_theta(dt, theta0, theta1, desired_hit_loc, rocket_data)
         theta0 = tmp
     return theta1
+
 
 def find_minimal_distance(dt, rocket_data_first, rocket_data_second):
     first_path = rocket_in_air(dt, rocket_data_first)
@@ -103,6 +104,8 @@ def find_minimal_distance(dt, rocket_data_first, rocket_data_second):
 
 
 if __name__ == "__main__":
-    r = RocketData(0, 0, 10, 0, 0)
-    print(find_theta(0.0001, r, 30))
+    data1 = RocketData(0, 0, ROCKET_VEL, math.radians(50), 0)
+    data2 = RocketData(100, 0, ROCKET_VEL, math.radians(-45), 0)
+
+    print(find_minimal_distance(0.001, data1, data2))
 

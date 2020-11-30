@@ -21,12 +21,20 @@ def sanity_check():
     fig, ax = plt.subplots()
     ax.plot(x_list, y_list)
 
-    data = RocketData(0, 0, ROCKET_VEL, math.radians(50), -.1 * DRAG_TOTAL_COEF)
+    ax.set_xlabel("x (m)")
+    ax.set_ylabel("y (m)")
+    ax.legend(["drag = infinite"])
+
+    fig.show()
+
+    fig, ax = plt.subplots()
+
+    data = RocketData(0, 0, ROCKET_VEL, math.radians(50), -1 * DRAG_TOTAL_COEF)
     path = rocket_in_air(0.0001, data)
 
     x_list = []
     y_list = []
-    while True:
+    for i in range(180000):
         curr = next(path)
         if curr[1] < 0:
             break
@@ -37,7 +45,7 @@ def sanity_check():
 
     ax.set_xlabel("x (m)")
     ax.set_ylabel("y (m)")
-    ax.legend(["drag = infinite", "drag = negative"])
+    ax.legend(["drag = negative"])
     fig.show()
 
 
@@ -79,6 +87,6 @@ def hit_lock_by_dt():
 
 
 if __name__ == "__main__":
-    hit_lock_by_dt()
+    sanity_check()
 
 
